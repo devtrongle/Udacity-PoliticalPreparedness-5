@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- TODO: Add node to connect Election ViewModel -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -15,7 +14,6 @@
             tools:context="com.example.android.politicalpreparedness.MainActivity">
 
             <!-- TODO: Add Upcoming Election Recycler and Header -->
-
             <TextView
                 android:id="@+id/upcoming_election_title"
                 android:layout_width="match_parent"
@@ -42,7 +40,6 @@
                 app:layout_constraintTop_toBottomOf="@id/recycler_view_upcoming_election" />
 
             <!-- TODO: Add Saved Election Recycler and Header -->
-
             <androidx.recyclerview.widget.RecyclerView
                 android:overScrollMode="never"
                 android:id="@+id/recycler_view_upcoming_election"
@@ -74,6 +71,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <data>
+        <!-- TODO: Add node to connect Election ViewModel -->
         <variable
             name="viewModel"
             type="com.example.android.politicalpreparedness.election.ElectionsViewModel" />

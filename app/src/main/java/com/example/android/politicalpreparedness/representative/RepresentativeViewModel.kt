@@ -20,7 +20,7 @@ class RepresentativeViewModel(): ViewModel() {
 
     //TODO: Establish live data for representatives and address
     private val _representatives = MutableLiveData<List<Representative>>()
-    private val _address = MutableLiveData<Address>()
+    private val _address = MutableLiveData(Address())
     private val _showToast = MutableLiveData<String>()
 
     val representatives: LiveData<List<Representative>>
@@ -64,9 +64,5 @@ class RepresentativeViewModel(): ViewModel() {
     Note: _representatives in the above code represents the established mutable live data housing representatives
 
      */
-
-    //TODO: Create function get address from geo location
-
-    //TODO: Create function to get address from individual fields
 
 }

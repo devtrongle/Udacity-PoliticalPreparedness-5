@@ -23,6 +23,7 @@ import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.android.synthetic.main.fragment_representative.*
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -31,6 +32,7 @@ class DetailFragment : Fragment() {
     private lateinit var representativeListAdapter: RepresentativeListAdapter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var binding: FragmentRepresentativeBinding
+    private lateinit var stateAdapter: ArrayAdapter<String>
 
     //TODO: Declare ViewModel
     private val viewModel: RepresentativeViewModel by lazy {
@@ -51,13 +53,19 @@ class DetailFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         //TODO: Populate Representative adapter
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.states))
-        binding.state.adapter = adapter
+        stateAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resources.getStringArray(R.array.states))
+        binding.state.adapter = stateAdapter
 
         //TODO: Establish button listeners for field and location search
         binding.buttonSearch.setOnClickListener {
             lifecycleScope.launch {
-                viewModel.getRepresentatives();
+                val line1 = binding.addressLine1.text.toString()
+                val line2 = binding.addressLine2.text.toString()
+                val city = binding.city.text.toString()
+                val state = binding.state.selectedItem.toString()
+                val zip = binding.zip.text.toString()
+                viewModel.setAddress(Address(line1, line2, city, state, zip))
+                viewModel.getRepresentatives()
             }
         }
 
@@ -137,6 +145,14 @@ class DetailFragment : Fragment() {
                 }
                 .first()
         viewModel.setAddress(result)
+        result.state?.let {
+            if (stateAdapter.getPosition(it) != -1) {
+                binding.state.setSelection(stateAdapter.getPosition(it))
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.getRepresentatives()
+        }
         return result
     }
 
