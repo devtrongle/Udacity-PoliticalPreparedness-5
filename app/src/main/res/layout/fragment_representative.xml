@@ -17,6 +17,7 @@
     <!-- TODO: Add motion scene to hide form on vertical scroll. -->
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:padding="@dimen/size_10dp"
+        android:id="@+id/motion_layout_container"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         app:layoutDescription="@xml/fragment_representative_scene">
@@ -41,6 +42,7 @@
             android:autofillHints=""
             android:hint="@string/Address_line_1"
             android:inputType="textPostalAddress"
+            android:saveEnabled="true"
             android:text="@{address.line1}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_title" />
@@ -49,6 +51,7 @@
         <!-- TODO: Add visual styling and content -->
         <EditText
             android:id="@+id/address_line_2"
+            android:saveEnabled="true"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:autofillHints=""
@@ -62,6 +65,7 @@
         <!-- TODO: Add visual styling and content -->
         <EditText
             android:id="@+id/city"
+            android:saveEnabled="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:autofillHints=""
@@ -90,6 +94,7 @@
         <!-- TODO: Add visual styling and content -->
         <EditText
             android:id="@+id/zip"
+            android:saveEnabled="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:autofillHints=""
@@ -138,6 +143,7 @@
             android:id="@+id/representative_recyclerview"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:saveEnabled="true"
             android:layout_marginTop="@dimen/size_10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"

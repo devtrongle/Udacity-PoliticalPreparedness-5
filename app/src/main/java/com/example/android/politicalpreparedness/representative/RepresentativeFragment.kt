@@ -23,7 +23,6 @@ import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import kotlinx.android.synthetic.main.fragment_representative.*
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -82,6 +81,18 @@ class DetailFragment : Fragment() {
 
         initObserve()
 
+        savedInstanceState?.apply {
+            val line1 = getString(LINE1,"")
+            val line2 = getString(LINE2,"")
+            val city = getString(CITY,"")
+            val state = getString(STATE,"")
+            val zip = getString(ZIP,"")
+            viewModel.setAddress(Address(line1, line2, city, state, zip))
+            binding.motionLayoutContainer.transitionState = getBundle(MOTION_STATE)
+            lifecycleScope.launch {
+                viewModel.getRepresentatives()
+            }
+        }
         return binding.root
     }
 
@@ -161,4 +172,24 @@ class DetailFragment : Fragment() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val bundle = Bundle()
+        bundle.putString(LINE1, binding.addressLine1.text.toString())
+        bundle.putString(LINE2, binding.addressLine2.text.toString())
+        bundle.putString(CITY, binding.city.text.toString())
+        bundle.putString(STATE, binding.state.selectedItem.toString())
+        bundle.putString(ZIP, binding.zip.text.toString())
+        bundle.putBundle(MOTION_STATE, binding.motionLayoutContainer.transitionState)
+        outState.putAll(bundle)
+    }
+
+    companion object {
+        const val LINE1 = "Line1"
+        const val LINE2 = "Line2"
+        const val CITY = "City"
+        const val STATE = "State"
+        const val ZIP = "Zip"
+        const val MOTION_STATE = "MotionState"
+    }
 }
