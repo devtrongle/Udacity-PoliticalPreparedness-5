@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -81,18 +82,6 @@ class DetailFragment : Fragment() {
 
         initObserve()
 
-        savedInstanceState?.apply {
-            val line1 = getString(LINE1,"")
-            val line2 = getString(LINE2,"")
-            val city = getString(CITY,"")
-            val state = getString(STATE,"")
-            val zip = getString(ZIP,"")
-            viewModel.setAddress(Address(line1, line2, city, state, zip))
-            binding.motionLayoutContainer.transitionState = getBundle(MOTION_STATE)
-            lifecycleScope.launch {
-                viewModel.getRepresentatives()
-            }
-        }
         return binding.root
     }
 
@@ -184,6 +173,18 @@ class DetailFragment : Fragment() {
         outState.putAll(bundle)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.apply {
+            val line1 = getString(LINE1,"")
+            val line2 = getString(LINE2,"")
+            val city = getString(CITY,"")
+            val state = getString(STATE,"")
+            val zip = getString(ZIP,"")
+            viewModel.setAddress(Address(line1, line2, city, state, zip))
+            binding.motionLayoutContainer.transitionState = getBundle(MOTION_STATE)
+        }
+    }
     companion object {
         const val LINE1 = "Line1"
         const val LINE2 = "Line2"
