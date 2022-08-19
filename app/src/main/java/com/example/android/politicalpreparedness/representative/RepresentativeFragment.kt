@@ -18,17 +18,21 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
+import com.example.android.politicalpreparedness.representative.model.Representative
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
-import java.util.Locale
+import java.util.*
+
 
 class DetailFragment : Fragment() {
-
+    private val TAG = "DetailFragment"
     private lateinit var representativeListAdapter: RepresentativeListAdapter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var binding: FragmentRepresentativeBinding
@@ -170,6 +174,11 @@ class DetailFragment : Fragment() {
         bundle.putString(STATE, binding.state.selectedItem.toString())
         bundle.putString(ZIP, binding.zip.text.toString())
         bundle.putBundle(MOTION_STATE, binding.motionLayoutContainer.transitionState)
+        bundle.putString(JSON_DATA, Gson().toJson(representativeListAdapter.currentList))
+        bundle.putParcelable(SCROLL_POSITION, binding.representativeRecyclerview.layoutManager?.onSaveInstanceState())
+        binding.representativeRecyclerview.layoutManager?.let {
+            bundle.putInt(SCROLL_POSITION, (it as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
+        }
         outState.putAll(bundle)
     }
 
@@ -183,6 +192,13 @@ class DetailFragment : Fragment() {
             val zip = getString(ZIP,"")
             viewModel.setAddress(Address(line1, line2, city, state, zip))
             binding.motionLayoutContainer.transitionState = getBundle(MOTION_STATE)
+            try {
+                val objectList = Gson().fromJson(getString(JSON_DATA), Array<Representative>::class.java).asList()
+                representativeListAdapter.submitList(objectList)
+                binding.representativeRecyclerview.scrollToPosition(getInt(SCROLL_POSITION))
+            } catch (ex : Exception) {
+                Log.e(TAG, ex.toString())
+            }
         }
     }
     companion object {
@@ -192,5 +208,7 @@ class DetailFragment : Fragment() {
         const val STATE = "State"
         const val ZIP = "Zip"
         const val MOTION_STATE = "MotionState"
+        const val SCROLL_POSITION = "ScrollPosition"
+        const val JSON_DATA = "DataRecyclerView"
     }
 }
